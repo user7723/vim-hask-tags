@@ -19,13 +19,15 @@ cscope_gen='hscope'
 cscope_flags='-b -f '$cscope_file
 
 # Err 1 - no ctags gen tool
-if [ ! $(which "$ctags_gen") ] ; then
+which "$ctags_gen"
+if [ $? -ne 0 ] ; then
   printf "Error: $ctags_gen was not found"
   exit 1
 fi
 
 # Err 2 - no cscope gen tool
-if [ ! $(which "$cscope_gen") ] ; then
+which "$cscope_gen"
+if [ $? -ne 0 ] ; then
   printf "Error: $cscope_gen was not found"
   exit 2
 fi

@@ -13,7 +13,11 @@ deps_dir=.deps
 outfile=.tags.deps
 
 # list of package dependencies
-pkgs=$(stack ls dependencies --test "$depth" --separator "-")
+pkgs=$(stack ls dependencies --test "$depth" --separator "-" 2>/dev/null)
+if [ $? -ne 0 ] ; then
+  echo "No stack project was found, perhabs you should run \`stack init\`"
+  exit 1
+fi
 
 # the project package itself should be skipped
 zero=$(stack ls dependencies --depth 0 --separator "-")
@@ -25,7 +29,7 @@ else
   echo "$msg (only direct deps):"
 fi
 
-echo $pkgs
+echo "$pkgs"
 
 exis='    [exist]: '
 fail='    [error]: '
@@ -40,11 +44,12 @@ for pkg in $pkgs; do
     # the code for package already was downloaded
     echo "$exis$pkg"
   else
+    stack --silent unpack $pkg --to $deps_dir
     # otherwise download the source code for the dependency package
-    if [ $(stack --silent unpack $pkg --to $deps_dir) ] ; then
-      echo "$fail$pkg"
-    else
+    if [ $? -eq 0 ] ; then
       echo "$unpa$pkg"
+    else
+      echo "$fail$pkg"
     fi
   fi
 done
