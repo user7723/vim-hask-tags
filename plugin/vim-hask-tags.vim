@@ -1,10 +1,6 @@
 set tags=.tags,.tags.deps
 set cscopeprg=hscope
 
-" extend keyword notion by adding Haskell's special symbols
-" except '.'
-set iskeyword+=33,35-38,42,43,45,47,60-64,28,124,126
-
 " do not depend on the vim keyword definition and simply yank a word you need
 " go to definition
 noremap gd "ayiw:let @a = escape(@a, "\|")<CR>:tag <C-R>a<CR>
