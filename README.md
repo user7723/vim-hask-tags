@@ -6,6 +6,12 @@
   - generate `ctags` file for that dependency code
   - generate/update `ctags` and `csope` files for your Haskell project
 
+To enable tags generation on each save of a file you simply need to introduce the following binding in your `vimrc`:
+```
+let g:genProjectTagsAfterBufWrite = 1
+```
+
+
 ### Dependencies
 - `ghc-tags` - [ghc-tags tool](https://github.com/arybczak/ghc-tags) is used to generate or update `ctags` for current project
 - `fast-tags` - [fast-tags tool](https://github.com/elaforge/fast-tags) is used to generate `ctags` for dependency code (dependency code will quite often use c-preprocessor directives which aren't taken into consideration by this tool -- it's more liberal than `ghc-tags`)
