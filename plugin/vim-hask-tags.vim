@@ -15,19 +15,27 @@ noremap gc "ayiw:let @a = escape(@a, "\|")<CR>:cscope find c <C-R>a<CR>
 
 let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 
+let s:tags_sh = s:path . '/hstags.sh'
+let s:deps_sh = s:path . '/hsdeps.sh'
+
+if !exists('g:genProjectTagsAfterBufWrite')
+  let g:genProjectTagsAfterBufWrite = 0
+endif
+
+if g:genProjectTagsAfterBufWrite == 1
+  autocmd BufWritePost,FileWritePost *.hs call system(s:tags_sh)
+endif
+
 function! HSTags()
-  let s:tags_sh = '' . s:path . '/hstags.sh'
-  echo s:tags_sh
-  execute '!' . s:tags_sh
+  let l:x = system(s:tags_sh)
+  echo l:x
 endfunction
 
 function! HSDeps()
-  let s:deps_sh = '' . s:path . '/hsdeps.sh'
-  echo s:deps_sh
   execute '!' . s:deps_sh
 endfunction
 
 " generate/update ctags and cscope files for current project
-noremap <leader>gt :call HSTags()<CR>
+noremap <silent> <leader>gt :call HSTags()<CR>
 " generate ctags for all the dependencies of current project
-noremap <leader>gd :call HSDeps()<CR>
+noremap <silent> <leader>gd :call HSDeps()<CR>
