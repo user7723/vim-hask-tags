@@ -9,8 +9,13 @@ depth=""
 # only direct dependencies
 #depth="--depth 1"
 
-deps_dir=.deps
-outfile=.tags.deps
+if [ $# -ne 2 ] ; then
+  echo 'please, provide `deps_dir` and `outfile` file paths as paramters'
+  exit 1
+fi
+
+deps_dir="$1"
+outfile="$2"
 
 # list of package dependencies
 pkgs=$(stack ls dependencies --test "$depth" --separator "-" 2>/dev/null)

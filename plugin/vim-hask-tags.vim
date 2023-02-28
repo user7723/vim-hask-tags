@@ -11,20 +11,31 @@ noremap gc "ayiw:let @a = escape(@a, "\|")<CR>:cscope find c <C-R>a<CR>
 
 let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 
-let s:tags_sh = s:path . '/hstags.sh'
-let s:deps_sh = s:path . '/hsdeps.sh'
+let s:ctagsFile = '.tags'
+let s:cscopeFile = '.hscope.db'
+
+" create db connection for cscope at startup
+execute 'cscope add ' . s:cscopeFile
+
+let s:depsDir = '.deps'
+let s:depsTags = '.tags.deps'
+
+let s:tags_sh = s:path . '/hstags.sh ' . s:ctagsFile . ' ' . s:cscopeFile
+let s:deps_sh = s:path . '/hsdeps.sh ' . s:depsDir . ' ' . s:depsTags
 
 if !exists('g:genProjectTagsAfterBufWrite')
   let g:genProjectTagsAfterBufWrite = 0
 endif
 
 if g:genProjectTagsAfterBufWrite == 1
-  autocmd BufWritePost,FileWritePost *.hs call system(s:tags_sh)
+  autocmd BufWritePost,FileWritePost *.hs call system(s:tags_sh . ' &')
 endif
 
 function! HSTags()
   let l:x = system(s:tags_sh)
   echo l:x
+  " create db connection for cscope at file creation
+  execute 'cscope add ' . s:cscopeFile
 endfunction
 
 function! HSDeps()

@@ -9,8 +9,13 @@
 # Err 4 - command execution error
 # Err 5 - output file generation failure
 
-ctags_file=".tags"
-cscope_file=".hscope.db"
+if [ $# -ne 2 ] ; then
+  echo 'please, provide `ctags_file` and `cscope_file` paths as paramters'
+  exit 1
+fi
+
+ctags_file="$1"
+cscope_file="$2"
 
 ctags_gen='ghc-tags'
 ctags_flags='-c -f '$ctags_file
